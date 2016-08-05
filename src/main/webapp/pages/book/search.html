@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>查找数据</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <!-- <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+        <script src="js/vendor/modernizr-2.6.2.min.js"></script> -->
+        <link rel="stylesheet" href="http://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css">
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Add your site or application content here -->
+        
+        <div ng-app="cates" ng-controller="cates_ctrl">
+        	<div >
+        		<button ng-repeat="c in cates" ng-click="showBooks(c.id)" class="btn">{{c.name}}</button>
+        	</div>
+			
+			<div  ng-init="books_show=false" ng-show="books_show">
+	        	<table class="table">
+	        		<thead>
+						<tr>
+							<th>名称</th>
+							<th>价格</th>
+							<th>作者</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr ng-repeat="book in bookList">
+							<td>{{book.title}}</td>
+							<td>{{book.price | currency}}</td>
+							<td>{{book.author}}</td>
+						</tr>
+						</tbody>
+	        	</table>
+	        </div>
+        </div>
+
+		<script src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+		<script>window.angular || document.write('<script src="../../js/angular.min.js"><\/script>')</script>
+		<script type="text/javascript">
+			var app = angular.module('cates',[]);
+			
+			app.controller('cates_ctrl',function($scope,$http){
+				$http.get("../../cate/list").success(function(resp){
+					$scope.cates = resp;
+					$scope.showBooks = function(id){
+						$http.get("../../book/list/"+id).success(function(resp){
+							$scope.books_show=true; 
+							$scope.bookList = resp;
+						});
+					}
+				});
+			}); 
+			
+		</script>
+    </body>
+</html>
